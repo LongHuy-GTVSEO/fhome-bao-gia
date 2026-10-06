@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Báo giá thiết kế và thi công nội thất | FHome Sài Gòn</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="margin:0;background:#fff">
+<!--FQ-START-->
+<div id="fq">
+  <h1 class="fq-title">Báo giá thiết kế và thi công nội thất</h1>
+
+  <div class="fq-grid">
+    <div class="fq-left">
+      <section class="fq-sec">
+        <h2>Bước 1 - Thông tin cần thiết</h2>
+        <div class="fq-label">Bạn cần dịch vụ nào?</div>
+        <div class="fq-seg fq-seg3" id="fq-svcSeg"></div>
+        <p class="fq-hint" id="fq-svcHint"></p>
+        <div class="fq-label">Loại nhà</div>
+        <div class="fq-seg" id="fq-typeSeg"></div>
+        <label class="fq-label" for="fq-area">Diện tích (m²) <span class="fq-req">(bắt buộc)</span></label>
+        <div class="fq-areabox">
+          <input id="fq-area" type="number" inputmode="decimal" min="1" step="any" placeholder="0">
+          <span>m²</span>
+        </div>
+        <p class="fq-hint" id="fq-areaHint"></p>
+        <div class="fq-label">Phong cách thiết kế</div>
+        <div class="fq-seg fq-styles" id="fq-styleSeg"></div>
+        <p class="fq-hint" id="fq-styleHint"></p>
+        <div class="fq-slider" id="fq-styleGal" hidden role="region" aria-roledescription="carousel" aria-label="Ảnh công trình FHome theo phong cách">
+          <div class="fq-track" id="fq-track"></div>
+          <button type="button" class="fq-nav prev" id="fq-prev" aria-label="Ảnh trước">‹</button>
+          <button type="button" class="fq-nav next" id="fq-next" aria-label="Ảnh sau">›</button>
+          <div class="fq-slcap"><div><b id="fq-galTitle"></b><span id="fq-galCap"></span></div><span class="fq-dots" id="fq-dots"></span></div>
+        </div>
+        <div id="fq-tierBox">
+        <div class="fq-label">Gói vật liệu</div>
+        <div class="fq-seg fq-seg3" id="fq-tierSeg"></div>
+        <p class="fq-hint" id="fq-tierHint"></p>
+        </div>
+      </section>
+
+      <section class="fq-sec" id="fq-secTho">
+        <h2>Bước 2 - Hoàn thiện phần thô</h2>
+        <p class="fq-hint fq-lead">Bỏ chọn những phần chủ đầu tư đã làm sẵn cho căn của bạn.</p>
+        <div id="fq-thoList"></div>
+      </section>
+
+      <section class="fq-sec" id="fq-secRoom">
+        <h2>Bước 3 - Đồ nội thất</h2>
+        <div id="fq-roomList"></div>
+      </section>
+    </div>
+
+    <aside class="fq-right" id="fq-panel">
+      <div class="fq-sum">
+        <div class="fq-sumrow"><span class="fq-sumlabel">Chi phí ước tính</span></div>
+        <div class="fq-total" id="fq-total">0</div>
+        <div class="fq-sumsub" id="fq-sumSub"></div>
+        <ul class="fq-lines" id="fq-lines"></ul>
+        <p class="fq-hint" id="fq-designFee"></p>
+      </div>
+      <div class="fq-cmp" id="fq-cmpBox">
+        <div class="fq-cmphead">So sánh 3 gói cho căn của bạn</div>
+        <div id="fq-cmp"></div>
+      </div>
+      <div class="fq-note">
+        <span class="fq-i" aria-hidden="true">i</span>
+        <p>Khái toán chi phí nhằm mục đích tham khảo, tính theo bảng giá công khai của FHome Sài Gòn. Chưa gồm đèn, rèm đặc biệt, tranh và decor. Hãy liên hệ FHome để nhận báo giá chi tiết sau khi khảo sát.</p>
+      </div>
+      <button type="button" class="fq-cta" id="fq-open">Nhận báo giá chi tiết</button>
+      <button type="button" class="fq-ghost" id="fq-copy">Sao chép kết quả để gửi người thân</button>
+    </aside>
+  </div>
+
+
+  <div class="fq-mbar" id="fq-mbar">
+    <div><small>Chi phí ước tính</small><b id="fq-mtotal">0</b></div>
+    <button type="button" class="fq-cta" id="fq-open2">Nhận báo giá</button>
+  </div>
+
+  <div class="fq-modal" id="fq-modal" hidden role="dialog" aria-modal="true" aria-labelledby="fq-mtitle">
+    <div class="fq-dialog">
+      <button type="button" class="fq-x" id="fq-close" aria-label="Đóng">×</button>
+      <form id="fq-leadForm" novalidate>
+        <h3 id="fq-mtitle">Nhận báo giá chi tiết</h3>
+        <p class="fq-mlead">Để lại thông tin, FHome sẽ liên hệ trong ngày làm việc để khảo sát và chốt giá sát thực tế.</p>
+        <div class="fq-mquote" id="fq-mquote"></div>
+        <label>Họ tên
+          <input name="fqname" type="text" required autocomplete="name">
+        </label>
+        <label>Số điện thoại
+          <input name="fqphone" type="tel" inputmode="tel" required autocomplete="tel" placeholder="09xx xxx xxx">
+        </label>
+        <label id="fq-emailWrap" hidden>Email
+          <input name="fqemail" type="email" autocomplete="email" placeholder="ten@email.com">
+        </label>
+        <label>Khu vực hoặc dự án (không bắt buộc)
+          <input name="fqplace" type="text" placeholder="Ví dụ Vinhomes Grand Park, Thủ Đức">
+        </label>
+        <p class="fq-err" id="fq-leadError" role="alert" hidden></p>
+        <button class="fq-cta" type="submit" id="fq-leadBtn">Gửi thông tin nhận báo giá</button>
+      </form>
+      <div id="fq-thanks" hidden>
+        <h3>Đã nhận thông tin của bạn</h3>
+        <p>Cảm ơn bạn. FHome sẽ liên hệ sớm để tư vấn và báo giá chi tiết.</p>
+        <div class="fq-sheet">
+          <div class="fq-sheethead">Bảng báo giá của bạn</div>
+          <pre id="fq-sheet"></pre>
+          <button type="button" class="fq-ghost" id="fq-copy2">Sao chép bảng báo giá</button>
+          <p class="fq-hint" id="fq-sheetNote"></p>
+        </div>
+        <div class="fq-contact" id="fq-contactBtns"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--FQ-END-->
+
+<script src="pricing.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

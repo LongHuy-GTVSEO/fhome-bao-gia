@@ -1,0 +1,848 @@
+<!-- Dán TOÀN BỘ nội dung file này vào khối "HTML tùy chỉnh" của trang WordPress. File này được tạo tự động từ index.html, style.css, pricing.js, app.js: sửa số liệu ở pricing.js rồi chạy lại build-embed.sh -->
+<style>
+/* Bố cục theo công cụ báo giá của Space T: trang dài 3 bước, khung tổng tiền cố định bên phải.
+   Màu và font theo fhomesg.vn: vàng #C9A96A, kem #F6F4EF, chữ đen, Roboto.
+   Mọi luật CSS nằm trong #fq để không đụng giao diện theme WordPress. */
+#fq{
+  --bg:#fff; --cream:#F6F4EF; --ink:#010101; --muted:#6b6458; --line:#E0D4C4;
+  --gold:#C9A96A; --gold-ink:#1a1408; --gold-soft:#f4ecdc; --err:#b42318;
+  max-width:1040px;margin:0 auto;padding:28px 16px 40px;background:var(--bg);color:var(--ink);
+  font:16px/1.5 Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;box-sizing:border-box;position:relative;
+}
+#fq *,#fq *::before,#fq *::after{box-sizing:border-box}
+#fq [hidden]{display:none!important}
+#fq button{font:inherit;color:inherit;cursor:pointer;text-transform:none;letter-spacing:0;box-shadow:none}
+#fq .fq-title{font-size:1.75rem;line-height:1.25;font-weight:500;text-align:center;margin:0 0 26px;color:var(--ink)}
+#fq h2{font-size:1.3rem;font-weight:700;margin:0 0 14px;color:var(--ink)}
+#fq h3{font-size:1.15rem;font-weight:700;margin:0 0 8px;color:var(--ink)}
+
+#fq .fq-grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:40px;align-items:start}
+#fq .fq-sec{margin-bottom:34px}
+#fq .fq-label{margin:18px 0 8px;color:var(--ink)}
+#fq .fq-req{color:var(--muted);font-size:.92rem}
+#fq .fq-hint{color:var(--muted);font-size:.9rem;margin:8px 0 0}
+#fq .fq-lead{margin:-6px 0 14px}
+
+/* Nút chọn một trong nhiều */
+#fq .fq-seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#fq .fq-seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#fq .fq-styles{grid-template-columns:repeat(3,minmax(0,1fr))}
+#fq .fq-styles .fq-none{grid-column:1/-1}
+#fq .fq-hint.warn{color:var(--ink);background:var(--gold-soft);border-radius:4px;padding:8px 10px}
+#fq .fq-seg button,#fq .fq-chip{min-height:46px;padding:8px 12px;background:#fff;border:1px solid var(--line);border-radius:4px;color:var(--ink);text-align:center;line-height:1.3}
+#fq .fq-seg button:hover,#fq .fq-chip:hover{border-color:var(--gold)}
+#fq .fq-seg button[aria-pressed="true"],#fq .fq-chip[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold);font-weight:700}
+#fq .fq-chip:focus-visible,#fq .fq-seg button:focus-visible,#fq .fq-cta:focus-visible,#fq .fq-areabox input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Ô diện tích */
+#fq .fq-areabox{display:flex;align-items:center;gap:10px}
+#fq .fq-areabox input{width:200px;max-width:60%;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);font:inherit;font-size:1.1rem;text-align:center;margin:0}
+
+/* Hàng chọn phần thô, đồ nội thất */
+#fq .fq-row{margin-bottom:16px}
+#fq .fq-rowname{margin:0 0 8px}
+#fq .fq-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#fq .fq-opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+#fq .fq-room{margin-bottom:26px}
+#fq .fq-roomhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+#fq .fq-roomhead h4{margin:0;font-size:1.1rem;font-weight:700}
+#fq .fq-tools{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#fq .fq-link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font-size:.9rem}
+#fq .fq-link:hover{color:var(--ink)}
+#fq .fq-count{display:flex;align-items:center;gap:8px;font-size:.95rem}
+#fq .fq-count button{width:32px;height:32px;padding:0;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:1.1rem;line-height:1}
+#fq .fq-count button:hover{border-color:var(--gold)}
+#fq .fq-count b{min-width:16px;text-align:center}
+#fq .fq-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#fq .fq-items.off{opacity:.4;pointer-events:none}
+
+/* Khung tổng tiền bên phải */
+#fq .fq-right{position:sticky;top:16px;display:flex;flex-direction:column;gap:16px}
+#fq .fq-sum{background:var(--cream);border-radius:6px;padding:18px}
+#fq .fq-sumlabel{color:var(--muted);font-weight:700}
+#fq .fq-total{font-size:1.8rem;font-weight:700;line-height:1.2;margin:6px 0 4px;font-variant-numeric:tabular-nums}
+#fq .fq-sumsub{color:var(--muted);font-size:.9rem}
+#fq .fq-lines{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
+#fq .fq-lines li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+#fq .fq-lines li span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+#fq .fq-note{display:flex;gap:10px;background:var(--cream);border-radius:6px;padding:14px}
+#fq .fq-note p{margin:0;font-size:.9rem;color:var(--ink)}
+#fq .fq-i{flex:none;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+#fq .fq-cta{display:block;width:100%;min-height:48px;padding:10px 18px;background:var(--gold);color:var(--gold-ink);border:0;border-radius:6px;font-weight:700}
+#fq .fq-cta:hover{filter:brightness(1.06)}
+#fq .fq-cta:disabled{opacity:.6;cursor:wait}
+
+/* Slide ảnh công trình theo phong cách */
+#fq .fq-slider{position:relative;margin-top:12px;border-radius:6px;overflow:hidden;background:var(--cream)}
+#fq .fq-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#fq .fq-track::-webkit-scrollbar{display:none}
+#fq .fq-track img{flex:0 0 100%;width:100%;aspect-ratio:3/2;object-fit:cover;scroll-snap-align:start;display:block}
+#fq .fq-nav{position:absolute;top:calc(50% - 38px);width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.92);font-size:1.5rem;line-height:1;display:flex;align-items:center;justify-content:center}
+#fq .fq-nav.prev{left:10px}
+#fq .fq-nav.next{right:10px}
+#fq .fq-nav:hover{background:#fff;border-color:var(--gold)}
+#fq .fq-slcap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;font-size:.88rem;color:var(--muted)}
+#fq .fq-slcap b{display:block;font-size:.95rem;color:var(--ink);line-height:1.35}
+#fq .fq-slcap div span{display:block;margin-top:2px}
+#fq .fq-dots{display:flex;gap:6px;flex:none}
+#fq .fq-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--line)}
+#fq .fq-dots button[aria-current="true"]{background:var(--gold)}
+
+/* So sánh 3 gói */
+#fq .fq-cmp{border:1px solid var(--line);border-radius:6px;padding:12px}
+#fq .fq-cmphead{font-weight:700;margin-bottom:8px}
+#fq .fq-cmprow{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:4px;padding:8px 10px;margin-bottom:6px}
+#fq .fq-cmprow:last-child{margin-bottom:0}
+#fq .fq-cmprow:hover{border-color:var(--gold)}
+#fq .fq-cmprow[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold)}
+#fq .fq-cmprow b{display:block}
+#fq .fq-cmprow span{display:block;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+#fq .fq-ghost{display:block;width:100%;min-height:44px;padding:8px 14px;background:#fff;border:1px solid var(--ink);border-radius:6px;font-weight:500}
+#fq .fq-ghost:hover{background:var(--cream)}
+
+/* Bảng báo giá sau khi gửi thông tin */
+#fq .fq-sheet{background:var(--cream);border-radius:6px;padding:12px;margin:14px 0}
+#fq .fq-sheethead{font-weight:700;margin-bottom:6px}
+#fq .fq-sheet pre{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.9rem;max-height:220px;overflow:auto}
+
+/* Thanh tổng tiền trên điện thoại */
+#fq .fq-mbar{display:none}
+
+/* Cửa sổ nhập thông tin */
+#fq .fq-modal{position:fixed;inset:0;z-index:99999;background:rgba(1,1,1,.55);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+#fq .fq-dialog{position:relative;width:100%;max-width:440px;background:#fff;border-radius:8px;padding:24px 20px 20px;margin:auto}
+#fq .fq-x{position:absolute;right:10px;top:8px;width:36px;height:36px;border:0;background:none;font-size:1.6rem;line-height:1}
+#fq .fq-mlead{margin:0 0 12px;color:var(--muted);font-size:.95rem}
+#fq .fq-mquote{background:var(--cream);border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:.92rem}
+#fq .fq-mquote b{font-size:1.1rem}
+#fq .fq-dialog label{display:block;font-weight:500;margin-bottom:12px}
+#fq .fq-dialog input{display:block;width:100%;margin:6px 0 0;height:46px;padding:0 12px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);font:inherit}
+#fq .fq-dialog input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+#fq .fq-err{color:var(--err);margin:0 0 10px;font-size:.92rem}
+#fq .fq-contact{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+#fq .fq-contact a{background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700}
+
+@media (max-width:860px){
+  #fq{padding-bottom:0}
+  #fq .fq-title{font-size:1.45rem}
+  #fq .fq-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  #fq .fq-right{position:static;margin-bottom:84px}
+  #fq .fq-right .fq-cta{display:none}
+  #fq .fq-mbar{display:flex;position:sticky;bottom:0;z-index:20;align-items:center;justify-content:space-between;gap:12px;margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line)}
+  #fq .fq-mbar small{display:block;color:var(--muted);font-size:.8rem}
+  #fq .fq-mbar b{font-size:1.1rem;font-variant-numeric:tabular-nums}
+  #fq .fq-mbar .fq-cta{width:auto;flex:none}
+}
+@media (max-width:480px){
+  #fq .fq-styles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #fq .fq-items{grid-template-columns:minmax(0,1fr)}
+  #fq .fq-seg3,#fq .fq-opts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #fq .fq-seg3 button{font-size:.9rem;padding:6px}
+}
+@media (prefers-reduced-motion:no-preference){
+  #fq .fq-seg button,#fq .fq-chip{transition:background .15s,border-color .15s}
+}
+</style>
+<!--FQ-START-->
+<div id="fq">
+  <h1 class="fq-title">Báo giá thiết kế và thi công nội thất</h1>
+
+  <div class="fq-grid">
+    <div class="fq-left">
+      <section class="fq-sec">
+        <h2>Bước 1 - Thông tin cần thiết</h2>
+        <div class="fq-label">Bạn cần dịch vụ nào?</div>
+        <div class="fq-seg fq-seg3" id="fq-svcSeg"></div>
+        <p class="fq-hint" id="fq-svcHint"></p>
+        <div class="fq-label">Loại nhà</div>
+        <div class="fq-seg" id="fq-typeSeg"></div>
+        <label class="fq-label" for="fq-area">Diện tích (m²) <span class="fq-req">(bắt buộc)</span></label>
+        <div class="fq-areabox">
+          <input id="fq-area" type="number" inputmode="decimal" min="1" step="any" placeholder="0">
+          <span>m²</span>
+        </div>
+        <p class="fq-hint" id="fq-areaHint"></p>
+        <div class="fq-label">Phong cách thiết kế</div>
+        <div class="fq-seg fq-styles" id="fq-styleSeg"></div>
+        <p class="fq-hint" id="fq-styleHint"></p>
+        <div class="fq-slider" id="fq-styleGal" hidden role="region" aria-roledescription="carousel" aria-label="Ảnh công trình FHome theo phong cách">
+          <div class="fq-track" id="fq-track"></div>
+          <button type="button" class="fq-nav prev" id="fq-prev" aria-label="Ảnh trước">‹</button>
+          <button type="button" class="fq-nav next" id="fq-next" aria-label="Ảnh sau">›</button>
+          <div class="fq-slcap"><div><b id="fq-galTitle"></b><span id="fq-galCap"></span></div><span class="fq-dots" id="fq-dots"></span></div>
+        </div>
+        <div id="fq-tierBox">
+        <div class="fq-label">Gói vật liệu</div>
+        <div class="fq-seg fq-seg3" id="fq-tierSeg"></div>
+        <p class="fq-hint" id="fq-tierHint"></p>
+        </div>
+      </section>
+
+      <section class="fq-sec" id="fq-secTho">
+        <h2>Bước 2 - Hoàn thiện phần thô</h2>
+        <p class="fq-hint fq-lead">Bỏ chọn những phần chủ đầu tư đã làm sẵn cho căn của bạn.</p>
+        <div id="fq-thoList"></div>
+      </section>
+
+      <section class="fq-sec" id="fq-secRoom">
+        <h2>Bước 3 - Đồ nội thất</h2>
+        <div id="fq-roomList"></div>
+      </section>
+    </div>
+
+    <aside class="fq-right" id="fq-panel">
+      <div class="fq-sum">
+        <div class="fq-sumrow"><span class="fq-sumlabel">Chi phí ước tính</span></div>
+        <div class="fq-total" id="fq-total">0</div>
+        <div class="fq-sumsub" id="fq-sumSub"></div>
+        <ul class="fq-lines" id="fq-lines"></ul>
+        <p class="fq-hint" id="fq-designFee"></p>
+      </div>
+      <div class="fq-cmp" id="fq-cmpBox">
+        <div class="fq-cmphead">So sánh 3 gói cho căn của bạn</div>
+        <div id="fq-cmp"></div>
+      </div>
+      <div class="fq-note">
+        <span class="fq-i" aria-hidden="true">i</span>
+        <p>Khái toán chi phí nhằm mục đích tham khảo, tính theo bảng giá công khai của FHome Sài Gòn. Chưa gồm đèn, rèm đặc biệt, tranh và decor. Hãy liên hệ FHome để nhận báo giá chi tiết sau khi khảo sát.</p>
+      </div>
+      <button type="button" class="fq-cta" id="fq-open">Nhận báo giá chi tiết</button>
+      <button type="button" class="fq-ghost" id="fq-copy">Sao chép kết quả để gửi người thân</button>
+    </aside>
+  </div>
+
+
+  <div class="fq-mbar" id="fq-mbar">
+    <div><small>Chi phí ước tính</small><b id="fq-mtotal">0</b></div>
+    <button type="button" class="fq-cta" id="fq-open2">Nhận báo giá</button>
+  </div>
+
+  <div class="fq-modal" id="fq-modal" hidden role="dialog" aria-modal="true" aria-labelledby="fq-mtitle">
+    <div class="fq-dialog">
+      <button type="button" class="fq-x" id="fq-close" aria-label="Đóng">×</button>
+      <form id="fq-leadForm" novalidate>
+        <h3 id="fq-mtitle">Nhận báo giá chi tiết</h3>
+        <p class="fq-mlead">Để lại thông tin, FHome sẽ liên hệ trong ngày làm việc để khảo sát và chốt giá sát thực tế.</p>
+        <div class="fq-mquote" id="fq-mquote"></div>
+        <label>Họ tên
+          <input name="fqname" type="text" required autocomplete="name">
+        </label>
+        <label>Số điện thoại
+          <input name="fqphone" type="tel" inputmode="tel" required autocomplete="tel" placeholder="09xx xxx xxx">
+        </label>
+        <label id="fq-emailWrap" hidden>Email
+          <input name="fqemail" type="email" autocomplete="email" placeholder="ten@email.com">
+        </label>
+        <label>Khu vực hoặc dự án (không bắt buộc)
+          <input name="fqplace" type="text" placeholder="Ví dụ Vinhomes Grand Park, Thủ Đức">
+        </label>
+        <p class="fq-err" id="fq-leadError" role="alert" hidden></p>
+        <button class="fq-cta" type="submit" id="fq-leadBtn">Gửi thông tin nhận báo giá</button>
+      </form>
+      <div id="fq-thanks" hidden>
+        <h3>Đã nhận thông tin của bạn</h3>
+        <p>Cảm ơn bạn. FHome sẽ liên hệ sớm để tư vấn và báo giá chi tiết.</p>
+        <div class="fq-sheet">
+          <div class="fq-sheethead">Bảng báo giá của bạn</div>
+          <pre id="fq-sheet"></pre>
+          <button type="button" class="fq-ghost" id="fq-copy2">Sao chép bảng báo giá</button>
+          <p class="fq-hint" id="fq-sheetNote"></p>
+        </div>
+        <div class="fq-contact" id="fq-contactBtns"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--FQ-END-->
+<script>
+// ============================================================
+// BẢNG GIÁ + CẤU HÌNH — CHỈ SỬA FILE NÀY ĐỂ ĐỔI SỐ LIỆU
+//
+// Nguồn số liệu: bảng giá công khai trên fhomesg.vn (lấy ngày 06/10/2026)
+//   - /gia-thiet-ke-thi-cong-noi-that-chung-cu
+//   - /gia-thiet-ke-thi-cong-noi-that-nha-pho
+// Đơn vị giá trong file này: TRIỆU ĐỒNG. Khoảng giá viết [thấp, cao] như trên web FHome.
+//
+// CÁCH TÍNH (giống cách FHome tự ước tính trên web):
+//   Tổng = diện tích x đơn giá phần thô x (phần thô khách chọn / tất cả)
+//        + diện tích x đơn giá nội thất x (hạng mục khách chọn / tất cả)
+// Cột "w" bên dưới chỉ là TỈ LỆ giữa các hạng mục, không phải giá tiền.
+//
+// Số ƯỚC LƯỢNG (web FHome chưa công bố, cần bên kinh doanh kiểm tra lại):
+//   - tỷ trọng các hạng mục phần thô (thoItems)
+//   - tỷ trọng nhà vệ sinh
+//   - tỷ lệ giữa các hạng mục trong từng phòng (lấy từ bảng mẫu của FHome, nhưng là ước tính)
+// ============================================================
+var FHU = "https://fhomesg.vn/wp-content/uploads/";   // thư mục ảnh trên web FHome
+window.FHOME_PRICING = {
+  brand: "FHome Sài Gòn",
+  zalo: "https://zalo.me/0904637687",
+  hotline: "0904637687",
+  hotlineLabel: "0904 637 687",
+
+  // Gửi thông tin khách qua form WPForms có sẵn trên trang WordPress (form 277, trang Liên hệ).
+  //   field 0 = Họ tên, 1 = Email (bắt buộc), 2 = Nội dung, 4 = Số điện thoại, 5 = Dịch vụ
+  // Muốn dùng form riêng: đổi formId và số thứ tự field. Field nào không có thì đặt null.
+  wpforms: {
+    formId: 277,
+    fields: { name: 0, email: 1, message: 2, phone: 4, service: 5 },
+    emailRequired: true
+    // Field "Dịch vụ" tự điền: Thiết kế nội thất (khi khách chọn Chỉ thiết kế) hoặc Thi công nội thất (trọn gói, chỉ thi công). Cấu hình trong app.js, mục SERVICES.
+  },
+
+  // Loại nhà. designFee = phí thiết kế (triệu/m²), FHome thường miễn hoặc giảm khi ký thi công trọn gói.
+  types: [
+    { id: "canho",  name: "Căn hộ chung cư", designFee: [0.25, 0.35], areaHint: "Diện tích sử dụng của căn hộ." },
+    { id: "nhapho", name: "Nhà phố",         designFee: [0.25, 0.45], areaHint: "Nhà phố tính theo tổng diện tích sàn của các tầng. Ví dụ nhà 4 x 15 m, 1 trệt 1 lầu thì nhập 120." }
+  ],
+
+  // Phong cách. fee = phí thiết kế (triệu/m²) theo bảng "báo giá thiết kế theo phong cách" của FHome (chung cư):
+  // Nhật Bản, Wabi Sabi, Hiện đại, Japandi, Tối giản = 250.000đ/m². Tân cổ điển, Luxury, Indochine = 350.000đ/m².
+  // [ƯỚC LƯỢNG] Nhà phố dùng lại cách chia nhóm này (web FHome chỉ ghi 250 / 350 / 450.000đ/m², chưa nói phong cách nào thuộc nhóm nào).
+  // suggest = gói vật liệu FHome thường gắn với phong cách đó (theo mô tả 3 gói trên web FHome).
+  // slides = ảnh công trình thật của FHome (lấy từ fhomesg.vn, trang Dự án) để khách xem tham khảo khi chọn phong cách.
+  // Mỗi ảnh có chú thích: phòng nào, căn hộ nào. Phong cách chưa có ảnh thì bỏ trống (tool tự ẩn khung ảnh).
+  styles: [
+    { id: "hiendai",  name: "Hiện đại",     fee: 0.25, suggest: ["tietkiem", "tieuchuan"], slides: [
+      { img: FHU + "2025/11/phong-khach-can-ho-chung-cu-54m2-thiet-ke-theo-phong-cach-hien-dai-tai-du-an-lumiere-boulevard.jpg", cap: "Phòng khách, căn hộ Lumiere Boulevard 54 m²" },
+      { img: FHU + "2025/10/Phong-khach-can-ho-Vinhomes-Grand-Park-54m2-phong-cach-Hien-dai-view-1.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 54 m²" },
+      { img: FHU + "2025/10/Phong-bep-can-ho-Vinhomes-Grand-Park-54m2-phong-cach-Hien-dai-view-1.jpg", cap: "Phòng bếp, căn hộ Vinhomes Grand Park 54 m²" },
+      { img: FHU + "2025/10/Phong-ngu-can-ho-Vinhomes-Grand-Park-54m2-phong-cach-Hien-dai-view-1.jpg", cap: "Phòng ngủ, căn hộ Vinhomes Grand Park 54 m²" } ] },
+    { id: "japandi",  name: "Japandi",      fee: 0.25, suggest: ["tieuchuan"], slides: [
+      { img: FHU + "2025/11/phong-cach-japandi-tao-khong-gian-uong-tra-ngay-tai-phong-khach-voi-cho-ngoi-sat-ben-mat-kinh.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/12/phong-khach-can-ho-vinhomes-grand-park-70m2-phong-cach-japandi-view-2.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/12/phong-khach-can-ho-vinhomes-grand-park-70m2-phong-cach-japandi-view-3.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/12/phong-bep-can-ho-vinhomes-grand-park-70m2-phong-cach-japandi-view-view-1.jpg", cap: "Phòng bếp, căn hộ Vinhomes Grand Park 70 m²" } ] },
+    { id: "wabisabi", name: "Wabi Sabi",    fee: 0.25, suggest: ["tieuchuan"], slides: [
+      { img: FHU + "2025/11/Phong-khach-can-ho-Vinhomes-Grand-Park-70m2-phong-cach-Wabi-Sabi-view-1.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/11/Phong-khach-can-ho-Vinhomes-Grand-Park-70m2-phong-cach-Wabi-Sabi-view-3.jpg", cap: "Phòng khách, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/11/Phong-bep-can-ho-Vinhomes-Grand-Park-70m2-phong-cach-Wabi-Sabi-view-1.jpg", cap: "Phòng bếp, căn hộ Vinhomes Grand Park 70 m²" },
+      { img: FHU + "2025/11/Phong-ngu-can-ho-Vinhomes-Grand-Park-70m2-phong-cach-Wabi-Sabi-view-10.jpg", cap: "Phòng ngủ, căn hộ Vinhomes Grand Park 70 m²" } ] },
+    { id: "nhatban",  name: "Nhật Bản",     fee: 0.25 },
+    { id: "toigian",  name: "Tối giản",     fee: 0.25, slides: [
+      { img: FHU + "2025/11/Phong-khach-can-ho-Masterise-Centre-Point-76m2-phong-cach-Minimalism-view-4-768x960.jpg", cap: "Phòng khách, căn hộ Masterise Centre Point 76 m²" },
+      { img: FHU + "2025/11/Phong-khach-can-ho-Masterise-Centre-Point-76m2-phong-cach-Minimalism-view-1.jpg", cap: "Phòng khách, căn hộ Masterise Centre Point 76 m²" },
+      { img: FHU + "2025/11/Phong-bep-can-ho-Masterise-Centre-Point-76m2-phong-cach-Minimalism-view-1.jpg", cap: "Phòng bếp, căn hộ Masterise Centre Point 76 m²" },
+      { img: FHU + "2025/11/Phong-ngu-can-ho-Masterise-Centre-Point-76m2-phong-cach-Minimalism-view-1.jpg", cap: "Phòng ngủ, căn hộ Masterise Centre Point 76 m²" } ] },
+    { id: "luxury",   name: "Luxury",       fee: 0.35, suggest: ["caocap"], slides: [
+      { img: FHU + "2025/11/phong-khach-chung-cu-3pn-luxury-voi-vach-tv-kinh-doc-dao-ket-hop-led-va-cay-xanh.jpg", cap: "Phòng khách, căn hộ Golden Mansion 109 m²" },
+      { img: FHU + "2025/12/Phong-khach-can-ho-Vinhomes-Grand-Park-59m2-phong-cach-Modern-Luxury-view-3.jpg", cap: "Phòng khách Modern Luxury, căn hộ Vinhomes Grand Park 59 m²" },
+      { img: FHU + "2025/12/Phong-bep-can-ho-Vinhomes-Grand-Park-59m2-phong-cach-Modern-Luxury-view-1.jpg", cap: "Phòng bếp Modern Luxury, căn hộ Vinhomes Grand Park 59 m²" },
+      { img: FHU + "2025/12/Phong-ngu-can-ho-Vinhomes-Grand-Park-59m2-phong-cach-Modern-Luxury-view-1.jpg", cap: "Phòng ngủ Modern Luxury, căn hộ Vinhomes Grand Park 59 m²" } ] },
+    { id: "tancodien", name: "Tân cổ điển", fee: 0.35, suggest: ["caocap"] },
+    { id: "indochine", name: "Indochine",   fee: 0.35 }
+  ],
+
+  // 3 gói của FHome. tho = đơn giá hoàn thiện phần thô (triệu/m²). noiThat = đơn giá nội thất theo loại nhà.
+  tiers: [
+    { id: "tietkiem", name: "Tiết kiệm", desc: "MDF tiêu chuẩn, phong cách Hiện đại",
+      tho: [1.0, 1.5], noiThat: { canho: [1.7, 2.5], nhapho: [1.8, 2.7] } },
+    { id: "tieuchuan", name: "Tiêu chuẩn", desc: "MDF An Cường chống ẩm, phụ kiện tốt",
+      tho: [1.5, 2.5], noiThat: { canho: [2.5, 4.0], nhapho: [2.7, 4.5] } },
+    { id: "caocap", name: "Cao cấp", desc: "Gỗ và đá tự nhiên, phụ kiện nhập khẩu",
+      tho: [2.5, 4.0], noiThat: { canho: [4.0, 10.0], nhapho: [4.5, 10.0] } }
+  ],
+
+  // BƯỚC 2. Hoàn thiện phần thô. mode "tri" = Không / Một phần / Toàn bộ, mode "bin" = Không / Có.
+  // w = tỷ trọng. [ƯỚC LƯỢNG] dựa trên đơn giá bảng "hoàn thiện phần thô" của FHome (trần 250-600k, sơn 150-300k, sàn 350-600k, điện nước 3-25 triệu...)
+  thoItems: [
+    { id: "tran",  name: "Trần thạch cao",         mode: "tri", w: 0.34 },
+    { id: "son",   name: "Sơn tường",              mode: "tri", w: 0.50 },
+    { id: "san",   name: "Sàn gỗ hoặc sàn gạch",   mode: "tri", w: 0.32 },
+    { id: "dien",  name: "Điện và nước",           mode: "bin", w: 0.20 },
+    { id: "donvs", name: "Dọn xà bần và vệ sinh công nghiệp", mode: "bin", w: 0.14 }
+  ],
+
+  // BƯỚC 3. Đồ nội thất theo phòng. weight = tỷ trọng của MỖI phòng (lấy theo giá trung bình các gói phòng trên web FHome:
+  // khách 34-80, bếp 25-67, ngủ master 29-40,7, ngủ nhỏ 18,9-25,8 triệu). w của hạng mục = khối lượng x đơn giá trong bảng mẫu của FHome.
+  rooms: [
+    { id: "khach", name: "Phòng khách", weight: 57, items: [
+      { id: "tugiay", name: "Tủ giày", w: 14.4 },
+      { id: "sofa",   name: "Sofa", w: 17.1 },
+      { id: "bantra", name: "Bàn trà", w: 7.9 },
+      { id: "ketv",   name: "Kệ tivi", w: 5.7 },
+      { id: "vachtv", name: "Vách ốp tivi", w: 10.7 },
+      { id: "vachsf", name: "Vách ốp sau sofa", w: 13.7 },
+      { id: "bantho", name: "Bàn thờ", w: 9.3 },
+      { id: "rem",    name: "Rèm cửa", w: 4.0 }
+    ]},
+    { id: "bep", name: "Phòng bếp và phòng ăn", weight: 46, items: [
+      { id: "tuduoi", name: "Tủ bếp dưới", w: 17.9 },
+      { id: "tutren", name: "Tủ bếp trên", w: 19.2 },
+      { id: "baotl",  name: "Khoang bao tủ lạnh", w: 7.4 },
+      { id: "kecanh", name: "Tủ kệ trang trí cạnh bếp", w: 12.0 },
+      { id: "damat",  name: "Đá mặt bếp", w: 24.0 },
+      { id: "lung",   name: "Ốp lưng bếp", w: 16.0 },
+      { id: "led",    name: "Đèn LED bếp", w: 2.0 }
+    ]},
+    { id: "master", name: "Phòng ngủ master", weight: 35, items: [
+      { id: "giuong", name: "Giường ngủ", w: 8.2 },
+      { id: "vachdg", name: "Vách đầu giường", w: 24.5 },
+      { id: "tuao",   name: "Tủ quần áo", w: 21.4 },
+      { id: "bantd",  name: "Bàn trang điểm", w: 4.9 },
+      { id: "guong",  name: "Gương soi", w: 3.2 },
+      { id: "tutv",   name: "Tủ tivi treo", w: 6.8 },
+      { id: "rem",    name: "Rèm cửa", w: 4.0 }
+    ]},
+    { id: "nho", name: "Phòng ngủ nhỏ", weight: 22, perUnit: true, min: 0, max: 5, count: 1, items: [
+      { id: "giuong", name: "Giường ngủ", w: 8.2 },
+      { id: "tuao",   name: "Tủ quần áo", w: 29.2 },
+      { id: "tutv",   name: "Tủ tivi", w: 6.8 },
+      { id: "rem",    name: "Rèm cửa", w: 4.0 }
+    ]},
+    { id: "wc", name: "Nhà vệ sinh", weight: 7, perUnit: true, min: 0, max: 4, count: 1, items: [   // [ƯỚC LƯỢNG] tỷ trọng
+      { id: "lavabo", name: "Tủ lavabo", w: 3.5 },
+      { id: "tugg",   name: "Tủ gương lavabo", w: 2.5 },
+      { id: "ledwc",  name: "Đèn LED tủ lavabo", w: 1.0 }
+    ]}
+  ],
+
+  // Khoảng giá hiển thị quanh mức trung bình. Đối chiếu 3 dự án thật trên web FHome:
+  // 54m² gói Tiêu chuẩn (thực tế 280-300 triệu, tool ra 261-317) và 70m² gói Tiêu chuẩn (360-380, tool ra 338-412) nằm trong khoảng;
+  // 109m² gói Cao cấp (thực tế 1,1-1,3 tỷ, tool ra 1,03-1,25 tỷ) trùm phần lớn khoảng, vì gói Cao cấp của FHome rất rộng (4-10 triệu/m²).
+  rangeLow: 0.92,
+  rangeHigh: 1.12,
+
+  defaults: { type: "canho", area: 0, tier: "tieuchuan" },
+  areaMin: 20,
+  areaMax: 600
+};
+</script>
+<script>
+(function () {
+  var P = window.FHOME_PRICING;
+  var root = document.getElementById("fq");
+  if (!root) return;
+  var $ = function (id) { return document.getElementById("fq-" + id); };
+  var M = 1000000;
+
+  // ---------- Trạng thái ----------
+  var state = {
+    service: "tron",    // tron = thiết kế và thi công trọn gói, thietke = chỉ thiết kế, thicong = chỉ thi công
+    type: P.defaults.type, tier: P.defaults.tier, area: P.defaults.area, style: "",
+    tho: {},        // id -> hệ số 0, 0.5, 1
+    items: {},      // "phong:hangmuc" -> true/false
+    counts: {},     // phong -> số lượng
+    quote: null
+  };
+  P.thoItems.forEach(function (t) { state.tho[t.id] = null; });   // khách tự chọn, ban đầu chưa chọn gì
+  P.rooms.forEach(function (r) {
+    state.counts[r.id] = r.perUnit ? r.count : 1;
+    r.items.forEach(function (it) { state.items[r.id + ":" + it.id] = false; });
+  });
+
+  // ---------- Tiện ích ----------
+  function fmt(v) {
+    var tr = Math.round(v / M);
+    if (tr >= 1000) return (Math.round(tr / 100) / 10).toString().replace(".", ",") + " tỷ";
+    if (v / M < 100) return (Math.round(v / M * 10) / 10).toString().replace(".", ",") + " triệu";   // dưới 100 triệu: giữ 1 số lẻ (phí thiết kế)
+    return tr.toLocaleString("vi-VN") + " triệu";
+  }
+  function rangeText(q) { return q.low === q.high ? fmt(q.low) : fmt(q.low) + " đến " + fmt(q.high); }
+  var SERVICES = [
+    { id: "tron",    name: "Thi công trọn gói", label: "thi công trọn gói", hint: "FHome thiết kế và thi công cùng một đơn vị. Phí thiết kế thường được miễn hoặc giảm.", wp: "Thi công nội thất" },
+    { id: "thietke", name: "Chỉ thiết kế",      label: "chỉ thiết kế",      hint: "Bản vẽ kỹ thuật 2D và phối cảnh 3D. Bạn không cần chọn hạng mục thi công.", wp: "Thiết kế nội thất" },
+    { id: "thicong", name: "Chỉ thi công",      label: "chỉ thi công",      hint: "Dành cho bạn đã có bản vẽ thiết kế. Giá chưa gồm phí thiết kế.", wp: "Thi công nội thất" }
+  ];
+  function getService() { return SERVICES.filter(function (s) { return s.id === state.service; })[0]; }
+  function mid(a) { return (a[0] + a[1]) / 2; }
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function getType() { return P.types.filter(function (t) { return t.id === state.type; })[0]; }
+  function getTier() { return P.tiers.filter(function (t) { return t.id === state.tier; })[0]; }
+  function getStyle() { return P.styles.filter(function (s) { return s.id === state.style; })[0] || null; }
+
+  // ---------- Dựng giao diện ----------
+  function pressGroup(container, value) {
+    [].forEach.call(container.children, function (b) { b.setAttribute("aria-pressed", String(b.dataset.v === String(value))); });
+  }
+
+  function buildSeg(container, list, key, onChange) {
+    list.forEach(function (it) {
+      var b = el("button", "", it.name); b.type = "button"; b.dataset.v = it.id;
+      b.addEventListener("click", function () { state[key] = it.id; pressGroup(container, it.id); onChange(); });
+      container.appendChild(b);
+    });
+    pressGroup(container, state[key]);
+  }
+
+  function buildTho() {
+    var box = $("thoList");
+    P.thoItems.forEach(function (t) {
+      var row = el("div", "fq-row"); row.appendChild(el("p", "fq-rowname", t.name));
+      var opts = el("div", "fq-opts" + (t.mode === "bin" ? " two" : ""));
+      var list = t.mode === "tri"
+        ? [["0", "Không"], ["0.5", "Một phần"], ["1", "Toàn bộ"]]
+        : [["0", "Không"], ["1", "Có"]];
+      list.forEach(function (o) {
+        var b = el("button", "fq-chip", o[1]); b.type = "button"; b.dataset.v = o[0];
+        b.addEventListener("click", function () {
+          state.tho[t.id] = Number(o[0]);
+          [].forEach.call(opts.children, function (c) { c.setAttribute("aria-pressed", String(c === b)); });
+          render();
+        });
+        b.setAttribute("aria-pressed", String(Number(o[0]) === state.tho[t.id]));
+        opts.appendChild(b);
+      });
+      row.appendChild(opts); box.appendChild(row);
+    });
+  }
+
+  function buildRooms() {
+    var box = $("roomList");
+    P.rooms.forEach(function (r) {
+      var wrap = el("div", "fq-room");
+      var head = el("div", "fq-roomhead");
+      head.appendChild(el("h4", "", r.name));
+      var tools = el("div", "fq-tools");
+      if (r.perUnit) {
+        var cnt = el("div", "fq-count");
+        var minus = el("button", "", "−"); minus.type = "button"; minus.setAttribute("aria-label", "Giảm số " + r.name.toLowerCase());
+        var num = el("b", "", String(state.counts[r.id]));
+        var plus = el("button", "", "+"); plus.type = "button"; plus.setAttribute("aria-label", "Tăng số " + r.name.toLowerCase());
+        cnt.appendChild(el("span", "", "Số lượng")); cnt.appendChild(minus); cnt.appendChild(num); cnt.appendChild(plus);
+        tools.appendChild(cnt);
+        var change = function (d) {
+          state.counts[r.id] = Math.max(r.min, Math.min(r.max, state.counts[r.id] + d));
+          num.textContent = state.counts[r.id];
+          grid.classList.toggle("off", state.counts[r.id] === 0);
+          render();
+        };
+        minus.addEventListener("click", function () { change(-1); });
+        plus.addEventListener("click", function () { change(1); });
+      }
+      var all = el("button", "fq-link", "Chọn tất cả"); all.type = "button";
+      var none = el("button", "fq-link", "Bỏ chọn"); none.type = "button";
+      tools.appendChild(all); tools.appendChild(none); head.appendChild(tools); wrap.appendChild(head);
+
+      var grid = el("div", "fq-items" + (state.counts[r.id] === 0 ? " off" : ""));
+      var chips = [];
+      r.items.forEach(function (it) {
+        var k = r.id + ":" + it.id;
+        var b = el("button", "fq-chip", it.name); b.type = "button";
+        b.setAttribute("aria-pressed", String(state.items[k]));
+        b.addEventListener("click", function () { state.items[k] = !state.items[k]; b.setAttribute("aria-pressed", String(state.items[k])); render(); });
+        chips.push([k, b]); grid.appendChild(b);
+      });
+      var setAll = function (v) { chips.forEach(function (c) { state.items[c[0]] = v; c[1].setAttribute("aria-pressed", String(v)); }); render(); };
+      all.addEventListener("click", function () { setAll(true); });
+      none.addEventListener("click", function () { setAll(false); });
+      wrap.appendChild(grid); box.appendChild(wrap);
+    });
+  }
+
+  // ---------- Tính giá ----------
+  function imgSrc(url) { return (window.FHOME_ASSETS && window.FHOME_ASSETS[url]) || url; }
+  function calc(tierOverride) {
+    var type = getType(), tier = tierOverride || getTier(), area = state.area;
+    if (state.service === "thietke") {
+      var st0 = getStyle();
+      var dz = st0 ? [area * st0.fee * M, area * st0.fee * M] : [area * type.designFee[0] * M, area * type.designFee[1] * M];
+      return {
+        service: "thietke", type: type, tier: tier, style: st0, area: area, total: (dz[0] + dz[1]) / 2, tho: 0, noiThat: 0,
+        lines: [{ name: "Thiết kế: bản vẽ kỹ thuật 2D và phối cảnh 3D", value: (dz[0] + dz[1]) / 2, text: dz[0] === dz[1] ? "khoảng " + fmt(dz[0]) : fmt(dz[0]) + " đến " + fmt(dz[1]) }],
+        low: dz[0], high: dz[1], design: dz
+      };
+    }
+    var thoAll = 0, thoSel = 0;
+    P.thoItems.forEach(function (t) { thoAll += t.w; thoSel += t.w * (state.tho[t.id] || 0); });
+    var tho = area * mid(tier.tho) * M * (thoSel / thoAll);
+
+    var full = 0, sel = 0, parts = [];
+    P.rooms.forEach(function (r) {
+      var sumW = r.items.reduce(function (s, it) { return s + it.w; }, 0);
+      var chosen = r.items.reduce(function (s, it) { return s + (state.items[r.id + ":" + it.id] ? it.w : 0); }, 0);
+      var c = state.counts[r.id];
+      full += r.weight * c;
+      var part = r.weight * c * (chosen / sumW);
+      sel += part;
+      if (part > 0) parts.push({ room: r, count: c, w: part });
+    });
+    var noiThat = full > 0 ? area * mid(tier.noiThat[type.id]) * M * (sel / full) : 0;
+    var total = noiThat + tho;
+    var lines = parts.map(function (p) {
+      var label = p.room.perUnit && p.count > 1 ? p.room.name + " (" + p.count + ")" : p.room.name;
+      return { name: label, value: noiThat * (p.w / sel) };
+    });
+    var style = getStyle();
+    var design = style ? [area * style.fee * M, area * style.fee * M] : [area * type.designFee[0] * M, area * type.designFee[1] * M];
+    return {
+      service: state.service, type: type, tier: tier, style: style, area: area, total: total, tho: tho, noiThat: noiThat, lines: lines,
+      low: total * P.rangeLow, high: total * P.rangeHigh, design: design
+    };
+  }
+
+  function render() {
+    var area = state.area;
+    var ok = area >= P.areaMin && area <= P.areaMax;
+    var q = state.quote = ok ? calc() : null;
+    var txt = q && q.total > 0 ? rangeText(q) : "0";
+    $("total").textContent = txt;
+    $("mtotal").textContent = txt;
+    $("tierHint").textContent = getTier().desc + ".";
+    var designOnly = state.service === "thietke";
+    $("svcHint").textContent = getService().hint;
+    ["secTho", "secRoom", "tierBox", "cmpBox"].forEach(function (id) { $(id).hidden = designOnly; });
+    var st = getStyle(), sh = $("styleHint");
+    if (!designOnly && st && st.suggest && st.suggest.indexOf(state.tier) < 0) {
+      var names = st.suggest.map(function (id) { return P.tiers.filter(function (t) { return t.id === id; })[0].name; }).join(" hoặc ");
+      sh.textContent = "Phong cách " + st.name + " thường đi cùng gói " + names + " của FHome. Bạn vẫn có thể chọn gói khác, FHome sẽ tư vấn thêm khi khảo sát.";
+      sh.className = "fq-hint warn";
+    } else {
+      sh.textContent = st ? "" : "Chưa chọn cũng được, FHome sẽ tư vấn phong cách phù hợp khi gặp bạn.";
+      sh.className = "fq-hint";
+    }
+    renderSlider(st);
+    renderCompare(ok);
+    var ul = $("lines"); ul.innerHTML = "";
+    if (q && q.total > 0) {
+      $("sumSub").textContent = q.type.name + " " + area + " m², " + (q.style ? "phong cách " + q.style.name + ", " : "") +
+        (designOnly ? getService().label : getService().label + ", gói " + q.tier.name);
+      q.lines.forEach(function (l) { ul.appendChild(el("li", "", "<span>" + l.name + "</span><span>" + (l.text || fmt(l.value)) + "</span>")); });
+      if (q.tho > 0) ul.appendChild(el("li", "", "<span>Hoàn thiện phần thô</span><span>" + fmt(q.tho) + "</span>"));
+      var dfee = q.design[0] === q.design[1] ? "khoảng " + fmt(q.design[0]) : "khoảng " + fmt(q.design[0]) + " đến " + fmt(q.design[1]);
+      $("designFee").textContent = state.service === "tron"
+        ? "Phí thiết kế (bản vẽ 2D, phối cảnh 3D) " + dfee + ". FHome thường miễn hoặc giảm khoản này khi bạn ký thi công trọn gói."
+        : state.service === "thicong"
+          ? "Giá này chưa gồm phí thiết kế, vì bạn đã có bản vẽ."
+          : "Phí thiết kế thường được miễn hoặc giảm khi bạn ký thi công trọn gói với FHome.";
+    } else {
+      $("sumSub").textContent = !ok ? "Nhập diện tích từ " + P.areaMin + " đến " + P.areaMax + " m² để xem chi phí." : "Bạn chọn các hạng mục ở Bước 2 và Bước 3 để xem chi phí.";
+      $("designFee").textContent = "";
+    }
+  }
+
+  // ---------- Slide ảnh công trình theo phong cách ----------
+  var sl = { styleId: null, i: 0, n: 0, slides: [] };
+  function slideGo(i, smooth) {
+    var tr = $("track");
+    sl.i = Math.max(0, Math.min(sl.n - 1, i));
+    tr.scrollTo({ left: sl.i * tr.clientWidth, behavior: smooth === false ? "auto" : "smooth" });
+    slideMark();
+  }
+  function slideMark() {
+    $("galTitle").textContent = "Dự án FHome Sài Gòn đã triển khai phong cách " + sl.name;
+    $("galCap").textContent = sl.slides[sl.i] ? sl.slides[sl.i].cap : "";
+    [].forEach.call($("dots").children, function (d, k) { d.setAttribute("aria-current", String(k === sl.i)); });
+    $("prev").hidden = sl.i === 0; $("next").hidden = sl.i >= sl.n - 1;
+  }
+  function renderSlider(st) {
+    var box = $("styleGal"), slides = st && st.slides ? st.slides : [];
+    if (!slides.length) { box.hidden = true; sl.styleId = null; return; }
+    box.hidden = false;
+    if (sl.styleId === st.id) return;          // cùng phong cách thì giữ nguyên ảnh đang xem
+    sl = { styleId: st.id, name: st.name, i: 0, n: slides.length, slides: slides };
+    var tr = $("track"), dots = $("dots"); tr.innerHTML = ""; dots.innerHTML = "";
+    slides.forEach(function (s, k) {
+      var im = el("img"); im.src = imgSrc(s.img); im.alt = s.cap + ", phong cách " + st.name + " do FHome thi công"; if (k > 0) im.loading = "lazy";
+      tr.appendChild(im);
+      var d = el("button"); d.type = "button"; d.setAttribute("aria-label", "Xem ảnh " + (k + 1) + " trên " + slides.length);
+      d.addEventListener("click", function () { slideGo(k); });
+      dots.appendChild(d);
+    });
+    tr.scrollLeft = 0; slideMark();
+  }
+  $("track").addEventListener("scroll", function () {
+    var tr = this, i = Math.round(tr.scrollLeft / (tr.clientWidth || 1));
+    if (i !== sl.i && i >= 0 && i < sl.n) { sl.i = i; slideMark(); }
+  });
+  $("prev").addEventListener("click", function () { slideGo(sl.i - 1); });
+  $("next").addEventListener("click", function () { slideGo(sl.i + 1); });
+
+  // ---------- So sánh 3 gói ----------
+  function renderCompare(ok) {
+    var box = $("cmp"); box.innerHTML = "";
+    P.tiers.forEach(function (t) {
+      var r = ok ? calc(t) : null;
+      var b = el("button", "fq-cmprow", "<b>" + t.name + "</b><span>" + (r && r.total > 0 ? fmt(r.low) + " đến " + fmt(r.high) : "0") + " · " + t.desc + "</span>");
+      b.type = "button"; b.setAttribute("aria-pressed", String(t.id === state.tier));
+      b.addEventListener("click", function () { state.tier = t.id; pressGroup($("tierSeg"), t.id); render(); });
+      box.appendChild(b);
+    });
+  }
+
+  // ---------- Sao chép bảng báo giá ----------
+  function sheetText() {
+    var q = state.quote; if (!q || q.total <= 0) return "";
+    var designOnly = q.service === "thietke";
+    var L = [
+      "BÁO GIÁ THAM KHẢO - " + P.brand.toUpperCase(),
+      q.type.name + " " + q.area + " m², " + (q.style ? "phong cách " + q.style.name + ", " : "") +
+        (designOnly ? getService().label : getService().label + ", gói " + q.tier.name),
+      (designOnly ? "Phí thiết kế ước tính: " : "Chi phí ước tính: ") + rangeText(q),
+      ""
+    ];
+    q.lines.forEach(function (l) { L.push("- " + l.name + ": " + (l.text || "khoảng " + fmt(l.value))); });
+    if (q.tho > 0) L.push("- Hoàn thiện phần thô: khoảng " + fmt(q.tho));
+    var d = q.design[0] === q.design[1] ? fmt(q.design[0]) : fmt(q.design[0]) + " đến " + fmt(q.design[1]);
+    if (q.service === "tron") L.push("", "Phí thiết kế (miễn hoặc giảm khi ký thi công trọn gói): khoảng " + d);
+    else if (q.service === "thicong") L.push("", "Giá chưa gồm phí thiết kế.");
+    else L.push("", "Phí thiết kế thường được miễn hoặc giảm khi ký thi công trọn gói với FHome.");
+    L.push("Giá chỉ mang tính tham khảo. Báo giá chính thức sau khi FHome khảo sát.",
+      "Liên hệ: " + (P.hotlineLabel || P.hotline));
+    return L.join("\n");
+  }
+  function copyText(btn) {
+    var txt = sheetText(), old = btn.textContent;
+    var ok = function () { btn.textContent = "Đã sao chép"; setTimeout(function () { btn.textContent = old; }, 1800); };
+    var fallback = function () {
+      var ta = document.createElement("textarea"); ta.value = txt; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); ok(); } catch (x) { btn.textContent = "Bạn bôi đen và sao chép thủ công nhé"; }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok, fallback); else fallback();
+  }
+  $("copy").addEventListener("click", function () { copyText(this); });
+  $("copy2").addEventListener("click", function () { copyText(this); });
+
+  // ---------- Bước 1 ----------
+  buildSeg($("svcSeg"), SERVICES, "service", render);
+  buildSeg($("typeSeg"), P.types, "type", function () { $("areaHint").textContent = getType().areaHint; render(); });
+  buildSeg($("styleSeg"), [{ id: "", name: "Chưa chọn, cần tư vấn" }].concat(P.styles), "style", render);
+  $("styleSeg").children[0].className = "fq-none";
+  buildSeg($("tierSeg"), P.tiers, "tier", render);
+  $("areaHint").textContent = getType().areaHint;
+  $("area").value = state.area;
+  $("area").addEventListener("focus", function () { this.select(); });
+  $("area").addEventListener("input", function () {
+    var v = parseFloat(this.value.replace(",", "."));
+    state.area = isNaN(v) ? 0 : v; render();
+  });
+  buildTho();
+  buildRooms();
+
+  // ---------- Cửa sổ nhận báo giá ----------
+  var lastFocus = null;
+  function openModal() {
+    if (!state.quote || state.quote.total <= 0) {
+      $("sumSub").textContent = state.service === "thietke" ? "Bạn nhập diện tích trước nhé." : "Bạn nhập diện tích và chọn ít nhất một hạng mục trước nhé.";
+      $("panel").scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+    var q = state.quote, W = P.wpforms;
+    $("mquote").innerHTML = q.type.name + " " + q.area + " m², " + (q.style ? "phong cách " + q.style.name + ", " : "") +
+      (q.service === "thietke" ? getService().label : getService().label + ", gói " + q.tier.name) + "<br><b>" + rangeText(q) + "</b>";
+    $("emailWrap").hidden = !(W && W.fields.email != null);
+    $("leadForm").hidden = false; $("thanks").hidden = true; $("leadError").hidden = true;
+    var b = $("leadBtn"); b.disabled = false; b.textContent = "Gửi thông tin nhận báo giá";
+    lastFocus = document.activeElement;
+    $("modal").hidden = false;
+    $("leadForm").fqname.focus();
+  }
+  function closeModal() { $("modal").hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); }
+  $("open").addEventListener("click", openModal);
+  $("open2").addEventListener("click", openModal);
+  $("close").addEventListener("click", closeModal);
+  $("modal").addEventListener("click", function (e) { if (e.target === $("modal")) closeModal(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("modal").hidden) closeModal(); });
+
+  // ---------- Gửi thông tin khách qua WPForms ----------
+  function buildMessage(q, lead) {
+    var thoText = P.thoItems.filter(function (t) { return state.tho[t.id] > 0; }).map(function (t) {
+      return t.name + (state.tho[t.id] === 0.5 ? " (một phần)" : "");
+    }).join(", ") || "không làm phần thô";
+    var rooms = P.rooms.filter(function (r) { return state.counts[r.id] > 0; }).map(function (r) {
+      var names = r.items.filter(function (it) { return state.items[r.id + ":" + it.id]; }).map(function (it) { return it.name; });
+      if (!names.length) return null;
+      var head = r.perUnit && state.counts[r.id] > 1 ? r.name + " (x" + state.counts[r.id] + ")" : r.name;
+      return head + ": " + names.join(", ");
+    }).filter(Boolean);
+    var lines = q.service === "thietke" ? [
+      "[Báo giá online] Khách cần CHỈ THIẾT KẾ. " + q.type.name + " " + q.area + " m².",
+      "Phong cách: " + (q.style ? q.style.name : "chưa chọn, cần tư vấn") + ".",
+      "Phí thiết kế tool tính: " + rangeText(q) + "."
+    ] : [
+      "[Báo giá online] Khách cần " + getService().label.toUpperCase() + ". " + q.type.name + " " + q.area + " m², gói " + q.tier.name + ".",
+      "Phong cách: " + (q.style ? q.style.name : "chưa chọn, cần tư vấn") + ".",
+      "Khoảng giá tool tính: " + fmt(q.low) + " đến " + fmt(q.high) + " (nội thất " + fmt(q.noiThat) + ", phần thô " + fmt(q.tho) + ").",
+      "Phần thô: " + thoText + ".",
+      "Nội thất: " + rooms.join("; ") + "."
+    ];
+    if (lead.place) lines.push("Khu vực hoặc dự án: " + lead.place + ".");
+    return lines.join("\n");
+  }
+
+  function setField(form, num, value) {
+    var f = form.querySelector('[name="wpforms[fields][' + num + ']"]');
+    if (!f) return false;
+    f.value = value;
+    ["input", "change"].forEach(function (t) { f.dispatchEvent(new Event(t, { bubbles: true })); });
+    return true;
+  }
+
+  // Trả về true nếu tìm thấy form WPForms trên trang và đã bấm gửi
+  function submitViaWpforms(lead, message, onOk, onFail) {
+    var W = P.wpforms;
+    if (!W || !W.formId) return false;
+    var form = document.getElementById("wpforms-form-" + W.formId);
+    if (!form) return false;
+    var F = W.fields;
+    setField(form, F.name, lead.name);
+    setField(form, F.phone, lead.phone);
+    if (F.email != null) setField(form, F.email, lead.email);
+    if (F.message != null) setField(form, F.message, message);
+    if (F.service != null) setField(form, F.service, getService().wp);   // Thiết kế nội thất hoặc Thi công nội thất
+
+    var done = false, timer;
+    var finish = function (ok) { if (done) return; done = true; clearTimeout(timer); (ok ? onOk : onFail)(); };
+    if (window.jQuery) {
+      window.jQuery(form).one("wpformsAjaxSubmitSuccess", function () { finish(true); });
+      window.jQuery(form).one("wpformsAjaxSubmitFailed wpformsAjaxSubmitError", function () { finish(false); });
+    }
+    timer = setTimeout(function () { finish(false); }, 15000);
+    var btn = form.querySelector('button[type="submit"], input[type="submit"], .wpforms-submit');
+    if (!btn) { clearTimeout(timer); return false; }
+    btn.click();
+    return true;
+  }
+
+  $("leadForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var f = e.target, le = $("leadError"), btn = $("leadBtn");
+    var lead = {
+      name: f.fqname.value.trim(),
+      phone: f.fqphone.value.replace(/[\s.\-]/g, ""),
+      email: f.fqemail.value.trim(),
+      place: f.fqplace.value.trim()
+    };
+    var W = P.wpforms, needEmail = W && W.fields.email != null && W.emailRequired;
+    if (!lead.name) { le.textContent = "Bạn nhập giúp họ tên nhé."; le.hidden = false; return; }
+    if (!/^(0|\+84)\d{9}$/.test(lead.phone)) { le.textContent = "Số điện thoại chưa đúng, bạn kiểm tra lại nhé."; le.hidden = false; return; }
+    if (needEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email)) { le.textContent = "Email chưa đúng, bạn kiểm tra lại nhé."; le.hidden = false; return; }
+    le.hidden = true;
+
+    var q = state.quote, message = buildMessage(q, lead);
+    var thanks = function () {
+      $("leadForm").hidden = true; $("thanks").hidden = false;
+      var t = $("thanks");
+      if (P.preview) {
+        t.querySelector("h3").textContent = "Đây là bản xem thử";
+        t.querySelector("p").textContent = "Thông tin bạn vừa nhập chưa được gửi đến FHome. Khi tool chạy trên website, bước này sẽ gửi thông tin về form WPForms của FHome.";
+      }
+      $("sheet").textContent = sheetText();
+      $("sheetNote").textContent = P.preview
+        ? "Bản xem thử: bạn sao chép bảng này để gửi người thân. Khi chạy thật trên website FHome, bảng này có thể được gửi thẳng về email hoặc Zalo của khách."
+        : "Bạn có thể sao chép bảng này để lưu lại hoặc gửi người thân.";
+      var c = $("contactBtns"); c.innerHTML = "";
+      if (P.zalo) c.innerHTML += '<a href="' + P.zalo + '" target="_blank" rel="noopener">Chat Zalo</a>';
+      if (P.hotline) c.innerHTML += '<a href="tel:' + P.hotline + '">Gọi ' + (P.hotlineLabel || P.hotline) + "</a>";
+    };
+    var fail = function () {
+      btn.disabled = false; btn.textContent = "Gửi thông tin nhận báo giá";
+      le.textContent = "Chưa gửi được. Bạn thử lại hoặc gọi " + (P.hotlineLabel || P.hotline) + " để FHome hỗ trợ ngay nhé.";
+      le.hidden = false;
+    };
+
+    btn.disabled = true; btn.textContent = "Đang gửi...";
+    if (submitViaWpforms(lead, message, thanks, fail)) return;
+
+    // Không có form WPForms trên trang (ví dụ đang mở thử file trên máy): lưu tạm trong trình duyệt
+    var payload = { time: new Date().toISOString(), name: lead.name, phone: lead.phone, email: lead.email, message: message };
+    try { var k = "fhome_leads", a = JSON.parse(localStorage.getItem(k) || "[]"); a.push(payload); localStorage.setItem(k, JSON.stringify(a)); } catch (x) {}
+    console.log("[FHome báo giá] Không thấy form WPForms trên trang nên chưa gửi đi đâu. Dữ liệu:", payload);
+    thanks();
+  });
+
+  render();
+})();
+</script>

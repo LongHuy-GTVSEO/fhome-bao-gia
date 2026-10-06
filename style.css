@@ -1,0 +1,142 @@
+/* Bố cục theo công cụ báo giá của Space T: trang dài 3 bước, khung tổng tiền cố định bên phải.
+   Màu và font theo fhomesg.vn: vàng #C9A96A, kem #F6F4EF, chữ đen, Roboto.
+   Mọi luật CSS nằm trong #fq để không đụng giao diện theme WordPress. */
+#fq{
+  --bg:#fff; --cream:#F6F4EF; --ink:#010101; --muted:#6b6458; --line:#E0D4C4;
+  --gold:#C9A96A; --gold-ink:#1a1408; --gold-soft:#f4ecdc; --err:#b42318;
+  max-width:1040px;margin:0 auto;padding:28px 16px 40px;background:var(--bg);color:var(--ink);
+  font:16px/1.5 Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;box-sizing:border-box;position:relative;
+}
+#fq *,#fq *::before,#fq *::after{box-sizing:border-box}
+#fq [hidden]{display:none!important}
+#fq button{font:inherit;color:inherit;cursor:pointer;text-transform:none;letter-spacing:0;box-shadow:none}
+#fq .fq-title{font-size:1.75rem;line-height:1.25;font-weight:500;text-align:center;margin:0 0 26px;color:var(--ink)}
+#fq h2{font-size:1.3rem;font-weight:700;margin:0 0 14px;color:var(--ink)}
+#fq h3{font-size:1.15rem;font-weight:700;margin:0 0 8px;color:var(--ink)}
+
+#fq .fq-grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:40px;align-items:start}
+#fq .fq-sec{margin-bottom:34px}
+#fq .fq-label{margin:18px 0 8px;color:var(--ink)}
+#fq .fq-req{color:var(--muted);font-size:.92rem}
+#fq .fq-hint{color:var(--muted);font-size:.9rem;margin:8px 0 0}
+#fq .fq-lead{margin:-6px 0 14px}
+
+/* Nút chọn một trong nhiều */
+#fq .fq-seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#fq .fq-seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
+#fq .fq-styles{grid-template-columns:repeat(3,minmax(0,1fr))}
+#fq .fq-styles .fq-none{grid-column:1/-1}
+#fq .fq-hint.warn{color:var(--ink);background:var(--gold-soft);border-radius:4px;padding:8px 10px}
+#fq .fq-seg button,#fq .fq-chip{min-height:46px;padding:8px 12px;background:#fff;border:1px solid var(--line);border-radius:4px;color:var(--ink);text-align:center;line-height:1.3}
+#fq .fq-seg button:hover,#fq .fq-chip:hover{border-color:var(--gold)}
+#fq .fq-seg button[aria-pressed="true"],#fq .fq-chip[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold);font-weight:700}
+#fq .fq-chip:focus-visible,#fq .fq-seg button:focus-visible,#fq .fq-cta:focus-visible,#fq .fq-areabox input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* Ô diện tích */
+#fq .fq-areabox{display:flex;align-items:center;gap:10px}
+#fq .fq-areabox input{width:200px;max-width:60%;height:46px;padding:0 14px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);font:inherit;font-size:1.1rem;text-align:center;margin:0}
+
+/* Hàng chọn phần thô, đồ nội thất */
+#fq .fq-row{margin-bottom:16px}
+#fq .fq-rowname{margin:0 0 8px}
+#fq .fq-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#fq .fq-opts.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+#fq .fq-room{margin-bottom:26px}
+#fq .fq-roomhead{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+#fq .fq-roomhead h4{margin:0;font-size:1.1rem;font-weight:700}
+#fq .fq-tools{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+#fq .fq-link{background:none;border:0;padding:0;color:var(--muted);text-decoration:underline;font-size:.9rem}
+#fq .fq-link:hover{color:var(--ink)}
+#fq .fq-count{display:flex;align-items:center;gap:8px;font-size:.95rem}
+#fq .fq-count button{width:32px;height:32px;padding:0;border-radius:50%;border:1px solid var(--line);background:#fff;font-size:1.1rem;line-height:1}
+#fq .fq-count button:hover{border-color:var(--gold)}
+#fq .fq-count b{min-width:16px;text-align:center}
+#fq .fq-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#fq .fq-items.off{opacity:.4;pointer-events:none}
+
+/* Khung tổng tiền bên phải */
+#fq .fq-right{position:sticky;top:16px;display:flex;flex-direction:column;gap:16px}
+#fq .fq-sum{background:var(--cream);border-radius:6px;padding:18px}
+#fq .fq-sumlabel{color:var(--muted);font-weight:700}
+#fq .fq-total{font-size:1.8rem;font-weight:700;line-height:1.2;margin:6px 0 4px;font-variant-numeric:tabular-nums}
+#fq .fq-sumsub{color:var(--muted);font-size:.9rem}
+#fq .fq-lines{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
+#fq .fq-lines li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+#fq .fq-lines li span:last-child{white-space:nowrap;font-variant-numeric:tabular-nums}
+#fq .fq-note{display:flex;gap:10px;background:var(--cream);border-radius:6px;padding:14px}
+#fq .fq-note p{margin:0;font-size:.9rem;color:var(--ink)}
+#fq .fq-i{flex:none;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:50%;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px}
+#fq .fq-cta{display:block;width:100%;min-height:48px;padding:10px 18px;background:var(--gold);color:var(--gold-ink);border:0;border-radius:6px;font-weight:700}
+#fq .fq-cta:hover{filter:brightness(1.06)}
+#fq .fq-cta:disabled{opacity:.6;cursor:wait}
+
+/* Slide ảnh công trình theo phong cách */
+#fq .fq-slider{position:relative;margin-top:12px;border-radius:6px;overflow:hidden;background:var(--cream)}
+#fq .fq-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#fq .fq-track::-webkit-scrollbar{display:none}
+#fq .fq-track img{flex:0 0 100%;width:100%;aspect-ratio:3/2;object-fit:cover;scroll-snap-align:start;display:block}
+#fq .fq-nav{position:absolute;top:calc(50% - 38px);width:40px;height:40px;padding:0;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.92);font-size:1.5rem;line-height:1;display:flex;align-items:center;justify-content:center}
+#fq .fq-nav.prev{left:10px}
+#fq .fq-nav.next{right:10px}
+#fq .fq-nav:hover{background:#fff;border-color:var(--gold)}
+#fq .fq-slcap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 12px;font-size:.88rem;color:var(--muted)}
+#fq .fq-slcap b{display:block;font-size:.95rem;color:var(--ink);line-height:1.35}
+#fq .fq-slcap div span{display:block;margin-top:2px}
+#fq .fq-dots{display:flex;gap:6px;flex:none}
+#fq .fq-dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--line)}
+#fq .fq-dots button[aria-current="true"]{background:var(--gold)}
+
+/* So sánh 3 gói */
+#fq .fq-cmp{border:1px solid var(--line);border-radius:6px;padding:12px}
+#fq .fq-cmphead{font-weight:700;margin-bottom:8px}
+#fq .fq-cmprow{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:4px;padding:8px 10px;margin-bottom:6px}
+#fq .fq-cmprow:last-child{margin-bottom:0}
+#fq .fq-cmprow:hover{border-color:var(--gold)}
+#fq .fq-cmprow[aria-pressed="true"]{background:var(--gold-soft);border-color:var(--gold)}
+#fq .fq-cmprow b{display:block}
+#fq .fq-cmprow span{display:block;font-size:.88rem;color:var(--muted);font-variant-numeric:tabular-nums}
+#fq .fq-ghost{display:block;width:100%;min-height:44px;padding:8px 14px;background:#fff;border:1px solid var(--ink);border-radius:6px;font-weight:500}
+#fq .fq-ghost:hover{background:var(--cream)}
+
+/* Bảng báo giá sau khi gửi thông tin */
+#fq .fq-sheet{background:var(--cream);border-radius:6px;padding:12px;margin:14px 0}
+#fq .fq-sheethead{font-weight:700;margin-bottom:6px}
+#fq .fq-sheet pre{margin:0 0 10px;white-space:pre-wrap;word-break:break-word;font:inherit;font-size:.9rem;max-height:220px;overflow:auto}
+
+/* Thanh tổng tiền trên điện thoại */
+#fq .fq-mbar{display:none}
+
+/* Cửa sổ nhập thông tin */
+#fq .fq-modal{position:fixed;inset:0;z-index:99999;background:rgba(1,1,1,.55);display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+#fq .fq-dialog{position:relative;width:100%;max-width:440px;background:#fff;border-radius:8px;padding:24px 20px 20px;margin:auto}
+#fq .fq-x{position:absolute;right:10px;top:8px;width:36px;height:36px;border:0;background:none;font-size:1.6rem;line-height:1}
+#fq .fq-mlead{margin:0 0 12px;color:var(--muted);font-size:.95rem}
+#fq .fq-mquote{background:var(--cream);border-radius:6px;padding:10px 12px;margin-bottom:14px;font-size:.92rem}
+#fq .fq-mquote b{font-size:1.1rem}
+#fq .fq-dialog label{display:block;font-weight:500;margin-bottom:12px}
+#fq .fq-dialog input{display:block;width:100%;margin:6px 0 0;height:46px;padding:0 12px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);font:inherit}
+#fq .fq-dialog input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+#fq .fq-err{color:var(--err);margin:0 0 10px;font-size:.92rem}
+#fq .fq-contact{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+#fq .fq-contact a{background:var(--gold);color:var(--gold-ink);padding:10px 16px;border-radius:6px;text-decoration:none;font-weight:700}
+
+@media (max-width:860px){
+  #fq{padding-bottom:0}
+  #fq .fq-title{font-size:1.45rem}
+  #fq .fq-grid{grid-template-columns:minmax(0,1fr);gap:0}
+  #fq .fq-right{position:static;margin-bottom:84px}
+  #fq .fq-right .fq-cta{display:none}
+  #fq .fq-mbar{display:flex;position:sticky;bottom:0;z-index:20;align-items:center;justify-content:space-between;gap:12px;margin:0 -16px;padding:10px 16px calc(10px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--line)}
+  #fq .fq-mbar small{display:block;color:var(--muted);font-size:.8rem}
+  #fq .fq-mbar b{font-size:1.1rem;font-variant-numeric:tabular-nums}
+  #fq .fq-mbar .fq-cta{width:auto;flex:none}
+}
+@media (max-width:480px){
+  #fq .fq-styles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #fq .fq-items{grid-template-columns:minmax(0,1fr)}
+  #fq .fq-seg3,#fq .fq-opts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #fq .fq-seg3 button{font-size:.9rem;padding:6px}
+}
+@media (prefers-reduced-motion:no-preference){
+  #fq .fq-seg button,#fq .fq-chip{transition:background .15s,border-color .15s}
+}
